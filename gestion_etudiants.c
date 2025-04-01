@@ -111,6 +111,25 @@ int supprimerEtudiant(int numero) {
     return 1;
 }
 
+// Fonction pour sauvegarder les données dans un fichier
+int sauvegarderDonnees(const char* nomFichier) {
+    FILE* fichier = fopen(nomFichier, "wb");
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier pour la sauvegarde.\n");
+        return 0;
+    }
+    
+    // Écrire le nombre d'étudiants
+    fwrite(&NBETU, sizeof(int), 1, fichier);
+    
+    // Écrire les données des étudiants
+    for (int i = 0; i < NBETU; i++) {
+        fwrite(&VETU[i], sizeof(Etudiant), 1, fichier);
+    }
+    
+    fclose(fichier);
+    return 1;
+}
 
 
 int main() {
