@@ -131,6 +131,48 @@ int sauvegarderDonnees(const char* nomFichier) {
     return 1;
 }
 
+// Fonction pour restaurer les données depuis un fichier
+int restaurerDonnees(const char* nomFichier) {
+    FILE* fichier = fopen(nomFichier, "rb");
+    if (fichier == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier pour la restauration.\n");
+        return 0;
+    }
+    
+    // Lire le nombre d'étudiants
+    if (fread(&NBETU, sizeof(int), 1, fichier) != 1) {
+        printf("Erreur : Lecture du nombre d'étudiants échouée.\n");
+        fclose(fichier);
+        return 0;
+    }
+    
+    // Vérifier si le nombre est valide
+    if (NBETU > MAX_ETUDIANTS) {
+        printf("Erreur : Trop d'étudiants dans le fichier.\n");
+        fclose(fichier);
+        NBETU = 0;
+        return 0;
+    }
+    
+    // Lire les données des étudiants
+    for (int i = 0; i < NBETU; i++) {
+        if (fread(&VETU[i], sizeof(Etudiant), 1, fichier) != 1) {
+            printf("Erreur : Lecture des données échouée.\n");
+            fclose(fichier);
+            NBETU = i;  // Mettre à jour le nombre d'étudiants réellement lus
+            chainerParMerite();
+            return 0;
+        }
+    }
+    
+    fclose(fichier);
+    
+    // Mettre à jour le chaînage
+    chainerParMerite();
+    
+    return 1;
+}
+
 
 int main() {
     return 0;
