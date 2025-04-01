@@ -243,5 +243,81 @@ void afficherParOrdreAleatoire() {
 
 
 int main() {
+    int choix;
+    char nomFichier[] = "etudiants.dat";
+    
+    // Essayer de restaurer les données au démarrage
+    if (restaurerDonnees(nomFichier)) {
+        printf("Données restaurées avec succès.\n");
+    } else {
+        printf("Aucune donnée à restaurer ou erreur lors de la restauration.\n");
+    }
+    
+    do {
+        printf("\n--- GESTION DES ÉTUDIANTS ---\n");
+        printf("1. Ajouter un étudiant\n");
+        printf("2. Supprimer un étudiant\n");
+        printf("3. Afficher par ordre alphabétique\n");
+        printf("4. Afficher par ordre de mérite\n");
+        printf("5. Afficher par ordre aléatoire\n");
+        printf("6. Quitter\n");
+        printf("Votre choix : ");
+        scanf("%d", &choix);
+        
+        switch (choix) {
+            case 1: {
+                int numero;
+                char nom[MAX_NOM];
+                float note;
+                
+                printf("Numéro de l'étudiant : ");
+                scanf("%d", &numero);
+                getchar();  // Pour consommer le retour à la ligne
+                
+                printf("Nom de l'étudiant : ");
+                fgets(nom, MAX_NOM, stdin);
+                nom[strcspn(nom, "\n")] = 0;  // Supprimer le retour à la ligne
+                
+                printf("Note de l'étudiant : ");
+                scanf("%f", &note);
+                
+                if (ajouterEtudiant(numero, nom, note)) {
+                    printf("Étudiant ajouté avec succès.\n");
+                }
+                break;
+            }
+            case 2: {
+                int numero;
+                printf("Numéro de l'étudiant à supprimer : ");
+                scanf("%d", &numero);
+                
+                if (supprimerEtudiant(numero)) {
+                    printf("Étudiant supprimé avec succès.\n");
+                }
+                break;
+            }
+            case 3:
+                afficherParOrdreAlphabetique();
+                break;
+            case 4:
+                afficherParOrdreMerite();
+                break;
+            case 5:
+                afficherParOrdreAleatoire();
+                break;
+            case 6:
+                // Sauvegarder les données avant de quitter
+                if (sauvegarderDonnees(nomFichier)) {
+                    printf("Données sauvegardées avec succès.\n");
+                } else {
+                    printf("Erreur lors de la sauvegarde des données.\n");
+                }
+                printf("Au revoir !\n");
+                break;
+            default:
+                printf("Choix invalide. Veuillez réessayer.\n");
+        }
+    } while (choix != 6);
+    
     return 0;
 }
