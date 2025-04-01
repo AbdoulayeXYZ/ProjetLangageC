@@ -82,6 +82,37 @@ int ajouterEtudiant(int numero, const char* nom, float note) {
     return 1;
 }
 
+// Fonction pour supprimer un étudiant par son numéro
+int supprimerEtudiant(int numero) {
+    int i;
+    // Rechercher l'étudiant à supprimer
+    for (i = 0; i < NBETU; i++) {
+        if (VETU[i].numero == numero) {
+            break;
+        }
+    }
+    
+    // Si l'étudiant n'a pas été trouvé
+    if (i == NBETU) {
+        printf("Erreur : Étudiant non trouvé.\n");
+        return 0;
+    }
+    
+    // Supprimer l'étudiant en déplaçant tous les étudiants suivants
+    for (int j = i; j < NBETU - 1; j++) {
+        VETU[j] = VETU[j + 1];
+    }
+    
+    NBETU--;
+    
+    // Mettre à jour le chaînage
+    chainerParMerite();
+    
+    return 1;
+}
+
+
+
 int main() {
     return 0;
 }
