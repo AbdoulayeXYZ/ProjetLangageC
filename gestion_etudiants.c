@@ -60,6 +60,28 @@ void chainerParMerite() {
     }
 }// Nombre actuel d'étudiants
 
+// Fonction pour ajouter un étudiant
+int ajouterEtudiant(int numero, const char* nom, float note) {
+    // Vérifier si nous avons atteint la limite
+    if (NBETU >= MAX_ETUDIANTS) {
+        printf("Erreur : Nombre maximum d'étudiants atteint.\n");
+        return 0;
+    }
+    
+    // Ajouter l'étudiant
+    VETU[NBETU].numero = numero;
+    strncpy(VETU[NBETU].nom, nom, MAX_NOM - 1);
+    VETU[NBETU].nom[MAX_NOM - 1] = '\0';  // S'assurer que la chaîne est terminée
+    VETU[NBETU].note = note;
+    
+    NBETU++;
+    
+    // Mettre à jour le chaînage
+    chainerParMerite();
+    
+    return 1;
+}
+
 int main() {
     return 0;
 }
