@@ -173,6 +173,74 @@ int restaurerDonnees(const char* nomFichier) {
     return 1;
 }
 
+// Fonction pour comparer deux étudiants par nom (pour qsort)
+int comparerParNom(const void* a, const void* b) {
+    return strcmp(((Etudiant*)a)->nom, ((Etudiant*)b)->nom);
+}
+
+// Fonction pour comparer deux étudiants par note (pour qsort)
+int comparerParNote(const void* a, const void* b) {
+    float diff = ((Etudiant*)b)->note - ((Etudiant*)a)->note;
+    return (diff > 0) ? 1 : ((diff < 0) ? -1 : 0);
+}
+
+// Fonction pour afficher les étudiants par ordre alphabétique
+void afficherParOrdreAlphabetique() {
+    // Créer une copie temporaire du tableau pour ne pas modifier l'original
+    Etudiant temp[MAX_ETUDIANTS];
+    memcpy(temp, VETU, NBETU * sizeof(Etudiant));
+    
+    // Trier par nom
+    qsort(temp, NBETU, sizeof(Etudiant), comparerParNom);
+    
+    // Afficher
+    printf("\nListe des étudiants par ordre alphabétique :\n");
+    printf("%-10s %-30s %-10s\n", "Numéro", "Nom", "Note");
+    printf("---------------------------------------------------\n");
+    
+    for (int i = 0; i < NBETU; i++) {
+        printf("%-10d %-30s %-10.2f\n", temp[i].numero, temp[i].nom, temp[i].note);
+    }
+}
+
+// Fonction pour afficher les étudiants par ordre de mérite
+void afficherParOrdreMerite() {
+    printf("\nListe des étudiants par ordre de mérite :\n");
+    printf("%-10s %-30s %-10s\n", "Numéro", "Nom", "Note");
+    printf("---------------------------------------------------\n");
+    
+    int i = DEB;
+    while (i != -1) {
+        printf("%-10d %-30s %-10.2f\n", VETU[i].numero, VETU[i].nom, VETU[i].note);
+        i = SUIVANT[i];
+    }
+}
+
+// Fonction pour afficher les étudiants dans un ordre aléatoire
+void afficherParOrdreAleatoire() {
+    // Créer une copie temporaire du tableau pour ne pas modifier l'original
+    Etudiant temp[MAX_ETUDIANTS];
+    memcpy(temp, VETU, NBETU * sizeof(Etudiant));
+    
+    // Mélanger le tableau
+    srand(time(NULL));
+    for (int i = NBETU - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        Etudiant t = temp[i];
+        temp[i] = temp[j];
+        temp[j] = t;
+    }
+    
+    // Afficher
+    printf("\nListe des étudiants dans un ordre aléatoire :\n");
+    printf("%-10s %-30s %-10s\n", "Numéro", "Nom", "Note");
+    printf("---------------------------------------------------\n");
+    
+    for (int i = 0; i < NBETU; i++) {
+        printf("%-10d %-30s %-10.2f\n", temp[i].numero, temp[i].nom, temp[i].note);
+    }
+}
+
 
 int main() {
     return 0;
