@@ -224,13 +224,28 @@ void rendreSupermat(SUPERMAT sm) {
     /* Vérifier si les lignes sont contiguës */
     int cont = contiguite(sm);
     
-    if (cont >= 1) {
-        /* Si les lignes sont contiguës, on peut libérer en une seule fois */
+    /* Vérifier si cette supermatrice est une sous-matrice */
+    int est_sous_matrice = 0;
+    
+    /* Une sous-matrice a typiquement des lignes non-contiguës ou
+       des lignes qui ne sont pas espacées de exactement nc éléments */
+    if (sm->nl > 1) {
+        for (int i = 1; i < sm->nl; i++) {
+            /* Si l'écart entre deux lignes n'est pas exactement nc, c'est probablement une sous-matrice */
+            if (sm->ligne[i] - sm->ligne[i-1] != sm->nc) {
+                est_sous_matrice = 1;
+                break;
+            }
+        }
+    }
+    
+    if (cont >= 1 && !est_sous_matrice) {
+        /* Si les lignes sont contiguës et ce n'est pas une sous-matrice, on peut libérer en une seule fois */
         if (sm->ligne && sm->ligne[0]) {
             free(sm->ligne[0]);
         }
-    } else {
-        /* Sinon, on doit libérer chaque ligne individuellement */
+    } else if (!est_sous_matrice) {
+        /* Si ce n'est pas une sous-matrice mais les lignes ne sont pas contiguës */
         for (int i = 0; i < sm->nl; i++) {
             if (sm->ligne[i]) {
                 /* Vérifier que cette ligne n'a pas déjà été libérée */
@@ -248,6 +263,7 @@ void rendreSupermat(SUPERMAT sm) {
             }
         }
     }
+    /* Pour une sous-matrice, on ne libère pas les données car elles appartiennent à la matrice originale */
     
     if (sm->ligne) {
         free(sm->ligne);
